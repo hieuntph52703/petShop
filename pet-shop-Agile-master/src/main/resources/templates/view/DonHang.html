@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th=“http://www.thymeleaf.org”>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary-color: #4a6fdc;
+            --secondary-color: #2196F3;
+            --danger-color: #f44336;
+            --warning-color: #ff9800;
+            --success-color: #4CAF50;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Tab Content */
+        .tab-content {
+            padding: 20px 0;
+            display: none;
+        }
+
+        #donHang {
+            display: block; /* Hiển thị tab Đơn Hàng mặc định */
+        }
+
+        /* Cards */
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f9f9f9;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #0b7dda;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: #3e8e41;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        table th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+
+        table tr:hover {
+            background-color: #f8f8f8;
+        }
+
+        .price {
+            font-weight: 500;
+            color: var(--primary-color);
+        }
+
+        /* Phần style đặc biệt cho trang đơn hàng */
+        .form-row {
+            display: flex;
+            margin-bottom: 15px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+            font-weight: 600;
+        }
+
+        .form-group p {
+            margin: 0;
+            padding: 5px 0;
+            font-size: 1rem;
+        }
+
+        /* Chi tiết đơn hàng */
+        .order-detail-header {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .order-info {
+            background-color: #f9f9f9;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Tổng cộng ở bảng chi tiết đơn hàng */
+        table tr.total-row td {
+            font-weight: bold;
+            background-color: #f2f2f2;
+        }
+
+        /* Style cho ô "Tổng cộng" */
+        table td.text-right {
+            text-align: right;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+            }
+
+            nav ul {
+                margin-top: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            nav ul li {
+                margin: 5px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="container header-container">
+        <div class="logo">Quản Lý Cửa Hàng Thú Cưng</div>
+        <nav>
+            <ul>
+                <li><a href="#" onclick="switchTab('dashboard')">Tổng Quan</a></li>
+                <li><a href="#" onclick="switchTab('thuCung')">Thú Cưng</a></li>
+                <li><a href="#" onclick="switchTab('sanPham')">Sản Phẩm</a></li>
+                <li><a href="#" class="active" onclick="switchTab('donHang')">Đơn Hàng</a></li>
+                <li><a href="#" onclick="switchTab('khachHang')">Khách Hàng</a></li>
+                <li><a href="#" onclick="switchTab('nhanVien')">Nhân Viên</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div id="donHang" class="tab-content">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Danh Sách Đơn Hàng</div>
+            <button class="btn btn-primary">Tạo Đơn Hàng</button>
+        </div>
+        <div class="card-body">
+            <table border="1">
+                <thead>
+                <tr>
+                    <th>Mã ĐH</th>
+                    <th>Khách Hàng</th>
+                    <th>Nhân Viên</th>
+                    <th>Ngày Đặt</th>
+                    <th>Tổng Tiền</th>
+                    <th>Thao Tác</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="dh, i : ${listDH}">
+                    <td th:text="${dh.maDonHang}"></td>
+                    <td th:text="${dh.KhachHang.tenKhachHang}"></td>
+                    <td th:text="${dh.NhanVien.tenNhanVien}"></td>
+                    <td th:text="${dh.ngayDat}"></td>
+                    <td th:text="${dh.tongTien}"></td>
+                    <td>
+                        <a>Chi tiết</a>
+<!--                        th:href="@{/don_hang/chi_tiet/{maDonHang}(maDonHang=${dh.maDonHang})}"-->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+
+
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">Chi Tiết Đơn Hàng </div>
+        </div>
+        <div class="card-body">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Khách Hàng:</label>
+                    <p>Nguyễn Văn A</p>
+                </div>
+                <div class="form-group">
+                    <label>Nhân Viên:</label>
+                    <p>Phạm Văn D</p>
+                </div>
+                <div class="form-group">
+                    <label>Ngày Đặt:</label>
+                    <p>20/03/2025</p>
+                </div>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>STT</th>
+                    <th>Sản Phẩm/Thú Cưng</th>
+                    <th>Loại</th>
+                    <th>Số Lượng</th>
+                    <th>Giá</th>
+                    <th>Thành Tiền</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>Chó Husky</td>
+                    <td>Thú cưng</td>
+                    <td>1</td>
+                    <td class="price">8.000.000 VNĐ</td>
+                    <td class="price">8.000.000 VNĐ</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Bánh thưởng cho chó</td>
+                    <td>Sản phẩm</td>
+                    <td>1</td>
+                    <td class="price">50.000 VNĐ</td>
+                    <td class="price">50.000 VNĐ</td>
+                </tr>
+                <tr>
+                    <td colspan="5" style="text-align: right;"><strong>Tổng cộng:</strong></td>
+                    <td class="price"><strong>8.050.000 VNĐ</strong></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
