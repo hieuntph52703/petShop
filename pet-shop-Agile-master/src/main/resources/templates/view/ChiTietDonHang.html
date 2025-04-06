@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi Tiết Đơn Hàng</title>
+</head>
+<body>
+<h1>Chi Tiết Đơn Hàng</h1>
+
+<h3>Mã Đơn Hàng: <span th:text="${donHang.maDonHang}"></span></h3>
+<h3>Tên Khách Hàng: <span th:text="${donHang.khachHang.tenKhachHang}"></span></h3>
+<h3>Ngày Đặt: <span th:text="${donHang.ngayDat}"></span></h3>
+<h3>Tổng Tiền: <span th:text="${donHang.tongTien}"></span></h3>
+
+<h3>Chi Tiết Sản Phẩm:</h3>
+<table>
+    <thead>
+    <tr>
+        <th>Tên Sản Phẩm</th>
+        <th>Số Lượng</th>
+        <th>Giá</th>
+        <th>Tổng Tiền</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="chiTiet : ${donHang.chiTietDonHangList}">
+        <td th:text="${chiTiet.sanPham.tenSanPham}"></td>
+        <td th:text="${chiTiet.soLuong}"></td>
+        <td th:text="${chiTiet.gia}"></td>
+        <td th:text="${chiTiet.soLuong * chiTiet.gia}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="/don-hang">Trở lại danh sách đơn hàng</a>
+</body>
+</html>

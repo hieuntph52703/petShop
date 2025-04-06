@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<html xmlns:th=“http://www.thymeleaf.org”>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -272,12 +273,11 @@
         </nav>
     </div>
 </header>
-
 <div id="thuCung" class="tab-content">
     <div class="card">
         <div class="card-header">
             <div class="card-title">Danh Sách Thú Cưng</div>
-            <button class="btn btn-primary">Thêm Thú Cưng</button>
+            <a class="btn btn-primary" th:href="@{/thu-cung/hien-thi}">Tải lại</a>
         </div>
         <div class="card-body">
             <table>
@@ -294,40 +294,24 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mèo Mun</td>
-                    <td>Mèo</td>
-                    <td>Mun</td>
-                    <td>2</td>
-                    <td class="price">3.000.000 VNĐ</td>
-                    <td><span class="badge badge-success">Chưa bán</span></td>
+                <tr th:each="thuCung : ${listThuCung}">
+                    <td th:text="${thuCung.maThuCung}">1</td>
+                    <td th:text="${thuCung.tenThuCung}">Tên</td>
+                    <td th:text="${thuCung.loai}">Loại</td>
+                    <td th:text="${thuCung.giong}">Giống</td>
+                    <td th:text="${thuCung.tuoi}">Tuổi</td>
+                    <td th:text="${thuCung.gia}">Giá</td>
                     <td>
-                        <button class="btn btn-primary">Sửa</button>
+                        <span th:classappend="${thuCung.trangThai == 'Chưa bán'} ? 'badge badge-success' : 'badge badge-warning'"
+                              th:text="${thuCung.trangThai}">Trạng thái</span>
                     </td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Chó Husky</td>
-                    <td>Chó</td>
-                    <td>Husky</td>
-                    <td>3</td>
-                    <td class="price">8.000.000 VNĐ</td>
-                    <td><span class="badge badge-warning">Đã bán</span></td>
                     <td>
-                        <button class="btn btn-primary">Sửa</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>Chim Vẹt</td>
-                    <td>Chim</td>
-                    <td>Vẹt Xanh</td>
-                    <td>1</td>
-                    <td class="price">1.500.000 VNĐ</td>
-                    <td><span class="badge badge-success">Chưa bán</span></td>
-                    <td>
-                        <button class="btn btn-primary">Sửa</button>
+                        <a th:href="@{'/thu-cung/edit/' + ${thuCung.maThuCung}}" class="btn btn-primary">
+                            <button class="btn btn-primary">Sửa</button></a>
+
+                        <a th:href="@{'/thu-cung/delete/' + ${thuCung.maThuCung}}" class="btn btn-danger"
+                           onclick="return confirm('Bạn có chắc muốn xóa nhân viên này không?')">
+                            <button class="btn btn-primary">Xóa</button></a>
                     </td>
                 </tr>
                 </tbody>
@@ -340,35 +324,36 @@
             <div class="card-title">Thêm/Sửa Thú Cưng</div>
         </div>
         <div class="card-body">
-            <form>
+            <form th:action="@{/thu-cung/save}" method="post" th:object="${thuCung}">
+                <input type="hidden" th:field="*{maThuCung}" />
                 <div class="form-row">
                     <div class="form-group">
                         <label for="tenThuCung">Tên Thú Cưng</label>
-                        <input type="text" id="tenThuCung" class="form-control">
+                        <input type="text" id="tenThuCung" class="form-control" th:field="*{tenThuCung}" required>
                     </div>
                     <div class="form-group">
                         <label for="loai">Loại</label>
-                        <input type="text" id="loai" class="form-control">
+                        <input type="text" id="loai" class="form-control" th:field="*{loai}" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="giong">Giống</label>
-                        <input type="text" id="giong" class="form-control">
+                        <input type="text" id="giong" class="form-control" th:field="*{giong}" required>
                     </div>
                     <div class="form-group">
                         <label for="tuoi">Tuổi</label>
-                        <input type="number" id="tuoi" class="form-control">
+                        <input type="number" id="tuoi" class="form-control" th:field="*{tuoi}" required>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="gia">Giá</label>
-                        <input type="number" id="gia" class="form-control">
+                        <input type="number" id="gia" class="form-control" th:field="*{gia}" required>
                     </div>
                     <div class="form-group">
                         <label for="trangThai">Trạng Thái</label>
-                        <select id="trangThai" class="form-control">
+                        <select id="trangThai" class="form-control" th:field="*{trangThai}">
                             <option value="Chưa bán">Chưa bán</option>
                             <option value="Đã bán">Đã bán</option>
                         </select>
@@ -379,6 +364,7 @@
         </div>
     </div>
 </div>
+
 
 </body>
 </html>
